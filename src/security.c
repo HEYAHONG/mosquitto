@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2011-2019 Roger Light <roger@atchoo.org>
+Copyright (c) 2011-2020 Roger Light <roger@atchoo.org>
 
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
@@ -549,7 +549,7 @@ int mosquitto_security_cleanup(struct mosquitto_db *db, bool reload)
 }
 
 
-//int mosquitto_acl_check(struct mosquitto_db *db, struct mosquitto *context, const char *topic, int access)
+/* int mosquitto_acl_check(struct mosquitto_db *db, struct mosquitto *context, const char *topic, int access) */
 static int acl__check_single(struct mosquitto__auth_plugin_config *auth_plugin, struct mosquitto *context, struct mosquitto_acl_msg *msg, int access)
 {
 	const char *username;
@@ -610,7 +610,7 @@ static int acl__check_dollar(const char *topic, int access)
 	}else if(!strncmp(topic, "$share", 6)){
 		/* Only allow sub/unsub to shared subscriptions */
 		if(access == MOSQ_ACL_SUBSCRIBE){
-		//FIXME if(access == MOSQ_ACL_SUBSCRIBE || access == MOSQ_ACL_UNSUBSCRIBE){
+		/* FIXME if(access == MOSQ_ACL_SUBSCRIBE || access == MOSQ_ACL_UNSUBSCRIBE){ */
 			return MOSQ_ERR_SUCCESS;
 		}else{
 			return MOSQ_ERR_ACL_DENIED;

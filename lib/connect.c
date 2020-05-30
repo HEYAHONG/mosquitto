@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010-2019 Roger Light <roger@atchoo.org>
+Copyright (c) 2010-2020 Roger Light <roger@atchoo.org>
 
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
@@ -43,6 +43,7 @@ static int mosquitto__connect_init(struct mosquitto *mosq, const char *host, int
 
 	if(!mosq) return MOSQ_ERR_INVAL;
 	if(!host || port <= 0) return MOSQ_ERR_INVAL;
+	if(keepalive < 5) return MOSQ_ERR_INVAL;
 
 	if(mosq->id == NULL && (mosq->protocol == mosq_p_mqtt31 || mosq->protocol == mosq_p_mqtt311)){
 		mosq->id = (char *)mosquitto__calloc(24, sizeof(char));
@@ -77,20 +78,6 @@ static int mosquitto__connect_init(struct mosquitto *mosq, const char *host, int
 	mosq->keepalive = keepalive;
 	mosq->msgs_in.inflight_quota = mosq->msgs_in.inflight_maximum;
 	mosq->msgs_out.inflight_quota = mosq->msgs_out.inflight_maximum;
-
-	if(mosq->sockpairR != INVALID_SOCKET){
-		COMPAT_CLOSE(mosq->sockpairR);
-		mosq->sockpairR = INVALID_SOCKET;
-	}
-	if(mosq->sockpairW != INVALID_SOCKET){
-		COMPAT_CLOSE(mosq->sockpairW);
-		mosq->sockpairW = INVALID_SOCKET;
-	}
-
-	if(net__socketpair(&mosq->sockpairR, &mosq->sockpairW)){
-		log__printf(mosq, MOSQ_LOG_WARNING,
-				"Warning: Unable to open socket pair, outgoing publish commands may be delayed.");
-	}
 
 	return MOSQ_ERR_SUCCESS;
 }

@@ -1,15 +1,15 @@
 /*
-Copyright (c) 2010-2018 Roger Light <roger@atchoo.org>
+Copyright (c) 2010-2020 Roger Light <roger@atchoo.org>
 
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
 and Eclipse Distribution License v1.0 which accompany this distribution.
- 
+
 The Eclipse Public License is available at
    http://www.eclipse.org/legal/epl-v10.html
 and the Eclipse Distribution License is available at
   http://www.eclipse.org/org/documents/edl-v10.php.
- 
+
 Contributors:
    Roger Light - initial implementation and documentation.
 */
@@ -34,9 +34,10 @@ Contributors:
 #include "memory_mosq.h"
 #include "persist.h"
 #include "time_mosq.h"
+#include "misc_mosq.h"
 #include "util_mosq.h"
 
-static uint32_t db_version;
+uint32_t db_version;
 
 const unsigned char magic[15] = {0x00, 0xB5, 0x00, 'm','o','s','q','u','i','t','t','o',' ','d','b'};
 
@@ -407,14 +408,14 @@ int persist__restore(struct mosquitto_db *db)
 		goto error;
 	}
 	if(!memcmp(header, magic, 15)){
-		// Restore DB as normal
+		/* Restore DB as normal */
 		read_e(fptr, &crc, sizeof(uint32_t));
 		read_e(fptr, &i32temp, sizeof(uint32_t));
 		db_version = ntohl(i32temp);
 		/* IMPORTANT - this is where compatibility checks are made.
 		 * Is your DB change still compatible with previous versions?
 		 */
-		if(db_version > MOSQ_DB_VERSION && db_version != 0){
+		if(db_version != MOSQ_DB_VERSION){
 			if(db_version == 4){
 			}else if(db_version == 3){
 				/* Addition of source_username and source_port to msg_store chunk in v4, v1.5.6 */
@@ -432,10 +433,12 @@ int persist__restore(struct mosquitto_db *db)
 				case DB_CHUNK_CFG:
 					if(db_version == 5){
 						if(persist__chunk_cfg_read_v5(fptr, &cfg_chunk)){
+							fclose(fptr);
 							return 1;
 						}
 					}else{
 						if(persist__chunk_cfg_read_v234(fptr, &cfg_chunk)){
+							fclose(fptr);
 							return 1;
 						}
 					}

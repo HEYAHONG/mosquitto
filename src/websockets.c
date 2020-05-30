@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2019 Roger Light <roger@atchoo.org>
+Copyright (c) 2014-2020 Roger Light <roger@atchoo.org>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -694,7 +694,7 @@ static int callback_http(struct libwebsocket_context *context,
 static void log_wrap(int level, const char *line)
 {
 	char *l = (char *)line;
-	l[strlen(line)-1] = '\0'; // Remove \n
+	l[strlen(line)-1] = '\0'; /* Remove \n */
 	log__printf(NULL, MOSQ_LOG_WEBSOCKETS, "%s", l);
 }
 

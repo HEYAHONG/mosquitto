@@ -21,6 +21,7 @@ MOSQ_OBJS=mosquitto.o \
 		  loop.o \
 		  memory_mosq.o \
 		  messages_mosq.o \
+		  misc_mosq.o \
 		  net_mosq_ocsp.o \
 		  net_mosq.o \
 		  options.o \
@@ -73,7 +74,7 @@ endif
 	$(INSTALL) mqtt_protocol.h "${DESTDIR}${incdir}/mqtt_protocol.h"
 	$(INSTALL) -d "${DESTDIR}${libdir}/pkgconfig"
 	$(INSTALL) -m644 ../libmosquitto.pc.in "${DESTDIR}${libdir}/pkgconfig/libmosquitto.pc"
-	sed -i -e "s#@CMAKE_INSTALL_PREFIX@#${prefix}#" -e "s#@VERSION@#${VERSION}#" "${DESTDIR}${libdir}/pkgconfig/libmosquitto.pc"
+	sed ${SEDINPLACE} -e "s#@CMAKE_INSTALL_PREFIX@#${prefix}#" -e "s#@VERSION@#${VERSION}#" "${DESTDIR}${libdir}/pkgconfig/libmosquitto.pc"
 ifeq ($(WITH_SHARED_LIBRARIES),yes)
 	$(MAKE) -C cpp install
 endif
@@ -151,6 +152,9 @@ messages_mosq.o : messages_mosq.c messages_mosq.h
 	${CROSS_COMPILE}$(CC) $(LIB_CPPFLAGS) $(LIB_CFLAGS) -c $< -o $@
 
 memory_mosq.o : memory_mosq.c memory_mosq.h
+	${CROSS_COMPILE}$(CC) $(LIB_CPPFLAGS) $(LIB_CFLAGS) -c $< -o $@
+
+misc_mosq.o : misc_mosq.c misc_mosq.h
 	${CROSS_COMPILE}$(CC) $(LIB_CPPFLAGS) $(LIB_CFLAGS) -c $< -o $@
 
 net_mosq_ocsp.o : net_mosq_ocsp.c net_mosq.h

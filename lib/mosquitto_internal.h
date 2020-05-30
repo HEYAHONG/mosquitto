@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2010-2019 Roger Light <roger@atchoo.org>
+Copyright (c) 2010-2020 Roger Light <roger@atchoo.org>
 
 All rights reserved. This program and the accompanying materials
 are made available under the terms of the Eclipse Public License v1.0
@@ -165,7 +165,6 @@ struct mosquitto_message_all{
 	struct mosquitto_message_all *prev;
 	mosquitto_property *properties;
 	time_t timestamp;
-	//enum mosquitto_msg_direction direction;
 	enum mosquitto_msg_state state;
 	bool dup;
 	struct mosquitto_message msg;
@@ -321,7 +320,7 @@ struct mosquitto {
 	void (*on_unsubscribe)(struct mosquitto *, void *userdata, int mid);
 	void (*on_unsubscribe_v5)(struct mosquitto *, void *userdata, int mid, const mosquitto_property *props);
 	void (*on_log)(struct mosquitto *, void *userdata, int level, const char *str);
-	//void (*on_error)();
+	/*void (*on_error)();*/
 	char *host;
 	int port;
 	char *bind_address;
